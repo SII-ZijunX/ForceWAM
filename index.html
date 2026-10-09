@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#153e51">
-  <meta name="description" content="ForceWAM learns task-compatible visual and force futures from demonstrations, and reactive contact responses from demonstrations and play.">
+  <meta name="description" content="ForceWAM learns contact responses from the actions and outcomes recorded in task-agnostic play, guided by visual-wrench futures learned from successful demonstrations.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="ForceWAM — Learning from Demo and Play">
-  <meta property="og:description" content="Decoupling future and response learning for contact-rich robot manipulation. Research, real-robot videos, and results.">
+  <meta property="og:description" content="Play need not solve a task to teach contact responses. ForceWAM learns task-compatible futures from demonstrations and execution from task and play.">
   <title>ForceWAM: Decoupling Future and Response Learning from Demo and Play Data for Contact-Rich Manipulation</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261009-play">
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
   <header class="site-header">
     <nav class="nav-inner" aria-label="Main navigation">
       <a class="wordmark" href="#top"><img src="favicon.svg" width="28" height="28" alt="">ForceWAM</a>
-      <div class="nav-links"><a href="#method">Method</a><a href="#results">Results</a><a href="#videos">Videos</a><a href="#citation">Cite</a></div>
+      <div class="nav-links"><a href="#motivation">Insight</a><a href="#results">Results</a><a href="#videos">Videos</a><a href="#citation">Cite</a></div>
     </nav>
   </header>
 
@@ -46,36 +46,51 @@
     </section>
 
     <section class="showcase container" aria-labelledby="showcase-heading">
-      <div class="showcase-heading"><h2 id="showcase-heading">Predict the interaction. Respond to contact.</h2><button class="text-button" id="preview-toggle" type="button" aria-pressed="true" hidden>Pause previews</button></div>
+      <div class="showcase-heading"><h2 id="showcase-heading">Learning contact responses from task-agnostic play.</h2><button class="text-button" id="preview-toggle" type="button" aria-pressed="true" hidden>Pause previews</button></div>
       <div class="preview-grid">
         <figure class="preview-card"><div class="preview-label"><span>01</span> Force-regulated sliding</div><video data-preview controls muted loop playsinline preload="none" poster="assets/posters/slide-01.jpg" aria-label="ForceWAM force-regulated sliding preview"><source src="assets/videos/slide-01.mp4" type="video/mp4">Your browser does not support video. <a href="assets/videos/slide-01.mp4">Download sliding video</a>.</video></figure>
         <figure class="preview-card"><div class="preview-label"><span>02</span> Box flipping</div><video data-preview controls muted loop playsinline preload="none" poster="assets/posters/flip-01.jpg" aria-label="ForceWAM box-flipping preview"><source src="assets/videos/flip-01.mp4" type="video/mp4">Your browser does not support video. <a href="assets/videos/flip-01.mp4">Download flipping video</a>.</video></figure>
         <figure class="preview-card"><div class="preview-label"><span>03</span> Flipping with disturbances</div><video data-preview controls muted loop playsinline preload="none" poster="assets/posters/flip-d-06.jpg" aria-label="ForceWAM disturbed box-flipping preview"><source src="assets/videos/flip-d-06.mp4" type="video/mp4">Your browser does not support video. <a href="assets/videos/flip-d-06.mp4">Download disturbed flipping video</a>.</video></figure>
         <figure class="preview-card"><div class="preview-label"><span>04</span> Hanoi ring placement</div><video data-preview controls muted loop playsinline preload="none" poster="assets/posters/hanoi-01.jpg" aria-label="ForceWAM Hanoi ring-placement preview"><source src="assets/videos/hanoi-01.mp4" type="video/mp4">Your browser does not support video. <a href="assets/videos/hanoi-01.mp4">Download ring-placement video</a>.</video></figure>
       </div>
-      <p class="showcase-caption">Demonstrations teach <strong>what a successful interaction looks and feels like.</strong><br>Play teaches <strong>how actions change contact.</strong></p>
+      <p class="showcase-caption">A play trajectory need not complete a task to teach <strong>how actions change contact.</strong><br>ForceWAM learns <strong>task-compatible futures from demonstrations</strong> and <strong>execution from task and play.</strong></p>
       <div class="highlights" aria-label="Research highlights">
-        <div><strong>85–95<span>%</span></strong><p>Mean success across four conditions</p></div>
         <div><strong>+15–45 <span>pp</span></strong><p>Success gains from task-agnostic play</p></div>
+        <div><strong>85–95<span>%</span></strong><p>Mean success across four conditions</p></div>
         <div><strong>Video <span>+</span> wrench</strong><p>Joint future prediction, reactive execution</p></div>
       </div>
     </section>
 
-    <section class="section section-tinted" id="abstract" aria-labelledby="abstract-heading">
-      <div class="prose-container"><p class="eyebrow">The idea</p><h2 id="abstract-heading">Abstract</h2>
+    <section class="section section-tinted" id="motivation" aria-labelledby="motivation-heading">
+      <div class="prose-container">
+        <p class="eyebrow">The play insight</p>
+        <h2 id="motivation-heading">Useful supervision beyond<br>successful demonstrations.</h2>
+        <p class="motivation-opening">Successful demonstrations show how motion and force evolve along a task-solving trajectory. A successful push, for example, may reveal little about how the load changes when the robot presses farther or backs away. Exploratory pressing, sliding, and release in <strong>task-agnostic play</strong> provide additional experience of these action–contact responses.</p>
+        <div class="insight-statement">
+          <h3>Learn actions conditioned on the interaction they produced.</h3>
+          <p>A play segment records actions together with the visual and force changes that followed. Given the current observation and this <strong>recorded visual-wrench future</strong>, the actions from the same segment provide a training target for the inverse dynamics model—even when the segment does not accomplish the task.</p>
+        </div>
+        <div class="transition-example" role="group" aria-label="Inverse dynamics supervision from one recorded task or play segment">
+          <div><p class="transition-label">Condition</p><p>Current observation<br><span class="transition-plus">+</span> Recorded visual-wrench future</p></div>
+          <div><p class="transition-label">Action target</p><p>Action sequence from<br>the same recorded segment</p></div>
+        </div>
+        <p class="motivation-bridge">ForceWAM assigns the choice of task-compatible futures to <strong>ForceWM, trained on successful demonstrations</strong>. The IDM learns execution from recorded task and play interactions. At deployment, ForceWM supplies the future for the IDM to realize, allowing the robot to draw on broader contact experience while pursuing the task.</p>
+        <p class="motivation-contact">The future specifies both <strong>how the scene should change</strong> and <strong>how contact forces should evolve</strong>. This gives the IDM a reference for motion and contact together.</p>
+        <details class="abstract-details" id="abstract"><summary id="abstract-heading">Read the full abstract</summary>
         <p class="abstract-text">Expert demonstrations show how to complete contact-rich tasks, but provide limited coverage of how interaction forces respond to different actions. Task-agnostic play provides broader experience of contact dynamics without specifying task goals. To fully leverage these two types of data, we introduce <strong>ForceWAM</strong>, a force world action model that decouples knowledge of task-compatible interaction outcomes from knowledge of how local actions change contact. A world model learns from successful demonstrations to jointly predict future video and six-axis force/torque trajectories. Together, these futures describe the expected evolution of motion and contact during the task. A separate inverse dynamics model (IDM) learns from both task and play, mapping current observations and recorded visual-wrench futures to their associated robot actions. Play data thus provide knowledge of force responses for goal-directed execution. At deployment, the IDM reactively translates generated futures into actions, reusing them with fresh wrench feedback between world-model updates. Across real-robot force-regulated sliding, box flipping with and without disturbances, and ring placement, ForceWAM achieves <strong>85–95% mean success</strong>, surpassing world-modeling and reactive baselines. Our experiments further show that adding task-agnostic play data improves success by <strong>15–45 percentage points</strong>, demonstrating its value for learning contact-rich execution.</p>
+        </details>
       </div>
     </section>
 
     <section class="section container" id="method" aria-labelledby="method-heading">
-      <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-heading">Two learning problems.<br>One contact-aware system.</h2><p>ForceWAM separates learning task-compatible futures from learning the actions that realize them. This lets different data sources contribute where they are most useful.</p></div>
+      <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-heading">Choose the interaction.<br>Learn how to realize it.</h2><p>This division of supervision gives task demonstrations and play distinct roles: demonstrations define task-compatible visual-wrench futures, while both sources teach the actions associated with observed outcomes.</p></div>
       <div class="method-steps">
-        <article><span class="step-number">01 / PREDICT</span><h3>Learn futures from demonstrations</h3><p><strong>ForceWM</strong> learns from successful task demonstrations to jointly generate future wrist-camera video and six-axis wrench trajectories, conditioned on the current observation and task instruction.</p></article>
-        <article><span class="step-number">02 / LEARN RESPONSES</span><h3>Learn execution from task and play</h3><p>The <strong>inverse dynamics model</strong> maps recorded visual-wrench futures and current observations to actions. Task-agnostic play broadens the action–contact transitions available for this learning.</p></article>
-        <article><span class="step-number">03 / REACT</span><h3>Update actions with fresh feedback</h3><p>At deployment, predicted futures replace recorded futures. A <strong>causal, slow–fast executor</strong> reuses these predictions while updating actions with newly measured wrench feedback.</p></article>
+        <article><span class="step-number">01 / TASK DEMONSTRATIONS</span><h3>Learn task-compatible futures</h3><p><strong>ForceWM</strong> learns from successful demonstrations to jointly generate future wrist-camera video and six-axis wrench trajectories. The current observation and task instruction guide the interaction it predicts.</p></article>
+        <article><span class="step-number">02 / TASK + PLAY</span><h3>Learn actions from observed outcomes</h3><p>The <strong>inverse dynamics model</strong> learns from current observations, recorded visual-wrench futures, and the associated actions. Play expands this execution supervision with interactions that need not demonstrate task success.</p></article>
+        <article><span class="step-number">03 / ONLINE EXECUTION</span><h3>Realize task futures with force feedback</h3><p>ForceWM supplies a task-compatible future to the IDM trained on task and play. The <strong>causal, slow–fast executor</strong> reuses that future while updating actions with newly measured wrench feedback.</p></article>
       </div>
       <figure class="paper-figure"><a href="assets/figures/method.pdf" target="_blank" rel="noopener" aria-label="Open the ForceWAM architecture figure as a PDF"><img src="assets/images/method.png" width="2400" height="1047" loading="lazy" alt="ForceWAM architecture: task demonstrations train the future generator; task and play train the inverse dynamics model; online execution combines generated futures and measured wrench feedback."></a><figcaption><strong>Training and deployment.</strong> ForceWM predicts a visual-wrench future from task demonstrations. The IDM learns from recorded futures and actions in both task and play data, then executes generated futures with measured contact feedback. Select the figure to open the full-resolution PDF.</figcaption></figure>
-      <details class="figure-details"><summary>View the motivation and comparison with policy learning</summary><figure class="paper-figure"><a href="assets/figures/overview.pdf" target="_blank" rel="noopener"><img src="assets/images/overview.png" width="2800" height="889" loading="lazy" alt="The paper's motivation figure compares force-conditioned policies, force-envisioned policies, and ForceWAM's separate future and response learning."></a><figcaption>The manuscript’s conceptual comparison and real-robot results. ForceWAM assigns task-compatible future learning and local execution learning to separate modules.</figcaption></figure></details>
+      <details class="figure-details"><summary>View the paper’s conceptual comparison</summary><figure class="paper-figure"><a href="assets/figures/overview.pdf" target="_blank" rel="noopener"><img src="assets/images/overview.png" width="2800" height="889" loading="lazy" alt="The paper's motivation figure compares force-conditioned policies, force-envisioned policies, and ForceWAM's separate future and response learning."></a><figcaption>The manuscript’s conceptual comparison and real-robot results. ForceWAM assigns task-compatible future learning and local execution learning to separate modules.</figcaption></figure></details>
     </section>
 
     <section class="section section-tinted" id="results" aria-labelledby="results-heading">
@@ -108,7 +123,14 @@
     </section>
 
     <section class="section container" id="play" aria-labelledby="play-heading">
-      <div class="split-section"><div><p class="eyebrow">Learning from play</p><h2 id="play-heading">More contact experience.<br>Better execution.</h2><p>Every task family has 200 demonstrations and 200 play episodes. Flip and Flip-D share the same training data. Keeping task demonstrations, ForceWM, and the number of IDM optimizer updates fixed, we vary the amount of play used to train the IDM.</p><p>Full play improves success by <strong>15–45 percentage points</strong>. Sliding sees the largest gain, from <strong>40% to 85%</strong>, without additional task demonstrations.</p><div class="inline-finding"><span>Task-agnostic play</span><p>Pressing, sliding, and making and breaking contact provide supervision for how actions change the interaction—even when the trajectory does not solve the task.</p></div></div><figure class="paper-figure"><a href="assets/figures/play-scaling.pdf" target="_blank" rel="noopener"><img src="assets/images/play-scaling.png" width="1100" height="754" loading="lazy" alt="Mean success improves as play data increase from 0 to 200 episodes per family: sliding from 40 to 85 percent, flipping from 75 to 95, disturbed flipping from 65 to 85, and Hanoi from 75 to 90."></a><figcaption><strong>Increasing play data.</strong> The five settings add 0, 50, 100, 150, or 200 play episodes per family. Intermediate subsets are sampled independently. Curves show mean success.</figcaption></figure></div>
+      <div class="split-section">
+        <div><p class="eyebrow">Testing the play insight</p><h2 id="play-heading">A fixed future model.<br>Better execution with play.</h2>
+          <p>We keep <strong>task demonstrations, ForceWM, and IDM optimizer updates fixed</strong> while increasing the play data used for execution learning. Each task family has 200 demonstrations and a pool of 200 play episodes; Flip and Flip-D share their training data.</p>
+          <p>Adding the full play pool improves success by <strong>15–45 percentage points</strong>. Sliding improves from <strong>40% to 85%</strong>. These gains come from updating the executor’s training data, with the same task-trained model supplying its future conditions.</p>
+          <div class="inline-finding"><span>How play is used matters</span><p>Adding play reduces success for the evaluated ImplicitRDP and Cosmos Policy variants in all four conditions (<a href="#main-results">main comparison</a>). Together with ForceWAM’s gains, these results support assigning task-compatible future learning and local response learning to separate objectives.</p></div>
+        </div>
+        <figure class="paper-figure"><a href="assets/figures/play-scaling.pdf" target="_blank" rel="noopener"><img src="assets/images/play-scaling.png" width="1100" height="754" loading="lazy" alt="Mean success improves as play data increase from 0 to 200 episodes per family: sliding from 40 to 85 percent, flipping from 75 to 95, disturbed flipping from 65 to 85, and Hanoi from 75 to 90."></a><figcaption><strong>Increasing play data.</strong> The five settings add 0, 50, 100, 150, or 200 play episodes per family. Intermediate subsets are sampled independently. Curves show mean success.</figcaption></figure>
+      </div>
     </section>
 
     <section class="section section-tinted" id="predictions" aria-labelledby="predictions-heading">
@@ -170,6 +192,6 @@
       </div>
     </section>
   </main>
-  <footer class="site-footer container"><a class="footer-brand" href="#top">ForceWAM</a><p>Learning task-compatible futures and contact responses from demo and play.</p><p class="credits">2026 · Page design inspired by <a href="https://lift-policy.github.io/">LIFT</a>.</p></footer>
+  <footer class="site-footer container"><a class="footer-brand" href="#top">ForceWAM</a><p>Task demonstrations guide the future. Task and play teach the response.</p><p class="credits">2026 · Page design inspired by <a href="https://lift-policy.github.io/">LIFT</a>.</p></footer>
 </body>
 </html>
